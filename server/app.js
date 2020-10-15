@@ -17,10 +17,6 @@ app.get('/', (req, res) => {
 let users = []
 let answer = []
 io.on('connection', (socket) => {
-<<<<<<< HEAD
-  console.log('a user connected');
-  io.emit('connect', {message : 'user udah konek nih'})
-=======
   let userData = null;
   socket.on('userConnect', (data) => {
     console.log('someone-connected test', data);
@@ -40,7 +36,6 @@ io.on('connection', (socket) => {
     // let removed = users.splice(indexDisconnectedUser,1)
     // console.log(users)
   })
->>>>>>> ffe4f8495a9990c2684a3a3a62de40ea451c3978
 })
 
 http.listen(PORT, () => console.log('http://localhost:' + PORT))

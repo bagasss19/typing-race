@@ -4,26 +4,18 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-<<<<<<< HEAD
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-=======
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx nodemon app.js"
   },
   "keywords": [],
->>>>>>> ffe4f8495a9990c2684a3a3a62de40ea451c3978
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "socket.io": "^2.3.0"
-<<<<<<< HEAD
-=======
   },
   "devDependencies": {
     "nodemon": "^2.0.5"
->>>>>>> ffe4f8495a9990c2684a3a3a62de40ea451c3978
   }
 }

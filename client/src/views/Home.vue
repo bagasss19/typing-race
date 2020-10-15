@@ -21,14 +21,6 @@
 <script>
 export default {
   name: 'Home',
-<<<<<<< HEAD
-  components: {
-    HelloWorld
-  },
-  sockets : {
-    connect: function (data) {
-      console.log(data,'<<<<<ini data dari home');
-=======
   data () {
     return {
       users: [],
@@ -52,7 +44,6 @@ export default {
       }
       this.$socket.emit('sendAnswer', payload)
       this.answer = ''
->>>>>>> ffe4f8495a9990c2684a3a3a62de40ea451c3978
     }
   }
 }
