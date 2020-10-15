@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 3000
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const quoteApi = require('./quoteApi')
+const axios = require('axios')
 
 app.use(cors())
 app.use(express.urlencoded({ extended: false }))
@@ -20,7 +21,7 @@ io.on('connection', (socket) => {
     console.log('someone-connected test', data);
     users.push(data)
     userData = data
-    io.emit('userConnected', users)
+    io.emit('USER_CONNECTED', users)
   })
 
   socket.on('sendAnswer', (data) => {
@@ -31,7 +32,20 @@ io.on('connection', (socket) => {
         return el.score = data.score
       }
     })
-    io.emit('userConnected', users)
+    io.emit('USER_CONNECTED', users)
+  })
+
+  socket.on('getQuote', () => {
+    axios({
+      url: 'https://favqs.com/api/qotd',
+      method: 'get',
+    })
+      .then(({ data }) => {
+        io.emit('QUOTE_RECEIVED', data.quote.body)
+      })
+      .catch(err => {
+        console.log(err.response, '<< fetch products err response index')
+      })
   })
 
   socket.on('disconnect', () => {
