@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 let users = []
 io.on('connection', (socket) => {
   console.log('a user connected');
-  io.emit('connect', {msg : 'user udah konek nih'})
+  io.emit('connect', {message : 'user udah konek nih'})
 })
 
 http.listen(PORT, () => console.log('http://localhost:' + PORT))

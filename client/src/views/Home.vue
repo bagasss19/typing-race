@@ -13,6 +13,11 @@ export default {
   name: 'Home',
   components: {
     HelloWorld
+  },
+  sockets : {
+    connect: function (data) {
+      console.log(data,'<<<<<ini data dari home');
+    }
   }
 }
 </script>
