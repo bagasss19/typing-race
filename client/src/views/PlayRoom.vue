@@ -62,12 +62,37 @@ export default {
       playerName: '',
     };
   },
+  sockets : {
+    win () {
+      this.showWinningMessage()
+    },
+    lose () {
+      this.showLosingMessage()
+    }
+  },
   methods: {
     reset() {
       this.testAreaInput = "";
     },
     getQuote () {
       this.$socket.emit('getQuote')
+    },
+    showWinningMessage () {
+      console.log("winning");
+      this.$swal.fire(
+        'Good job!',
+        'You Win!',
+        'success'
+      )
+    },
+    showLosingMessage () {
+      console.log("losing");
+      this.$swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'You Lose!',
+        footer: '<a href>Why do I have this issue?</a>'
+      })
     }
   },
   computed: {
