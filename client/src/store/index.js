@@ -11,16 +11,26 @@ export default new Vuex.Store({
   state: {
     quotes: "",
     users: [],
+    rooms: [],
+    room: {},
     quote: ''
   },
   mutations: {
     SET_QUOTES(state, payload) {
       state.quotes = payload
     },
-    'SOCKET_USER_CONNECTED' (state, payload) {
+    'SOCKET_USER_CONNECTED'(state, payload) {
       state.users = payload
     },
-    'SOCKET_QUOTE_RECEIVED' (state, payload) {
+    'SOCKET_ROOM_DETAIL'(state, payload) {
+      state.room = payload
+      console.log(state.room, "<<< socket updated room");
+    },
+    'SOCKET_UPDATED_ROOMS'(state, payload) {
+      state.rooms = payload
+      console.log(state.rooms, "<<< socket updated roomss");
+    },
+    'SOCKET_QUOTE_RECEIVED'(state, payload) {
       state.quote = payload
     }
   },

@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import PlayRoom from '../views/PlayRoom.vue'
 import Login from '../views/Login.vue'
+import Rooms from '../views/Rooms.vue'
+import PlayRoom from '../views/PlayRoom.vue'
 
 Vue.use(VueRouter)
 
@@ -18,7 +19,12 @@ const routes = [
     component: Login
   },
   {
-    path: '/playroom',
+    path: '/rooms',
+    name: 'Rooms',
+    component: Rooms
+  },
+  {
+    path: '/playroom/:name',
     name: 'PlayRoom',
     component: PlayRoom
   },
