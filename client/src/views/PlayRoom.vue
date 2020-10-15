@@ -92,6 +92,7 @@ export default {
         }
         this.$socket.emit('sendAnswer', payload)
         this.borderColor = "green";
+        this.testAreaInput = ''
         // clearInterval(interval);
       } else {
         if (this.testAreaInput == originTextMatch) {
