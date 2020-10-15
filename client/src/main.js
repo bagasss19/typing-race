@@ -4,6 +4,8 @@ import router from './router'
 import store from './store'
 import VueSocketIO from 'vue-socket.io'
 
+Vue.config.productionTip = false
+
 Vue.use(new VueSocketIO({
   debug: true,
   connection: 'http://metinseylan.com:1992',
@@ -13,8 +15,6 @@ Vue.use(new VueSocketIO({
     mutationPrefix: 'SOCKET_'
   }
 }))
-
-Vue.config.productionTip = false
 
 new Vue({
   router,

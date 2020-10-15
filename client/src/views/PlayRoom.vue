@@ -1,48 +1,29 @@
-<template>
+<template>  
   <section id="playroom">
-    <body>
-      <header class="title-area">
-        <h1>Test Your Typing Speed</h1>
-        <p>
-          Welcome to the TYPING RACE. Your goal is to duplicate the provided
+    <div class="title-area bg-dark">
+        <h1>
+          Welcome to the TYPING RACE, IkhsanGama!. Your goal is to duplicate the provided
           text, EXACTLY, in the field below. Good Luck!
-        </p>
-      </header>
-      <main class="main">
-        <div class="intro">
-          <h1>Player: IkhsanGama</h1>
-        </div>
-        <section class="test-area">
-          <div id="origin-text">
-            <p>{{ this.testText }}</p>
-          </div>
+        </h1>
+    </div><br>
 
-          <div
-            class="test-wrapper"
-            :style="{
-              border: '12px solid ' + this.borderColor,
-              borderRadius: '10px',
-            }"
-          >
-            <textarea
-              v-model="testAreaInput"
-              name="textarea"
-              rows="6"
-              placeholder="Start typing..."
-            >
-            </textarea>
-          </div>
-          <div>
-            <!-- <section id="clock">
-              <div class="timer">00:00:00</div>
-            </section> -->
-
-            <button @click="reset" id="reset">Start over</button>
-          </div>
-        </section>
+    <div class="test-area">
+      <div class="badge badge-primary text-wrap">
+        <p>{{ this.testText }}</p>
+      </div>
+    </div>
+        <center><textarea name="input" form="input" cols="50" rows="4">Type here...</textarea></center>
+            <form id="input">
+              <!-- <input type="textarea" v-model="testAreaInput" placeholder="type here" class="center"><br><br> -->
+              <button @click="reset" class="btn btn-warning flex-parent jc-center">Submit</button>
+            </form>
+    <div>
+      <!-- <section id="clock">
+        <div class="timer">00:00:00</div>
+        </section> -->
+    </div>
+       
         <!-- .test-area -->
-      </main>
-    </body>
   </section>
 </template>
 
@@ -51,7 +32,7 @@ export default {
   name: "PlayRoom",
   data() {
     return {
-      testText: "type test lorem ipsum",
+      testText: "",
       testAreaInput: "",
       spellCheck: false,
       borderColor: "grey",
@@ -93,41 +74,45 @@ export default {
 <style>
 /* Typography */
 
-body,
-button,
 input,
 select,
-textarea {
-  font-family: "Source Sans Pro", "Helvetica", Arial, sans-serif;
+p {
+  font-family: 'Balsamiq Sans', cursive;
+  text-align: center;
+}
+/* textarea {
+  font-family: 'Balsamiq Sans', cursive;
   font-size: 18px;
   line-height: 1.5;
-}
+} */
 
 h1 {
-  clear: both;
+  text-align: center;
+  font-size: 20px;
+  font-family: 'Balsamiq Sans', cursive;
 }
 
 p {
+  text-align: center;
   margin-bottom: 1.5em;
 }
 
 /* Layout */
 body {
-  margin: 0;
-  padding: 0;
+  background: cornflowerblue;
 }
 
 .title-area {
-  padding: 1em 2em;
+  padding: 1em 0.5em;
   background-color: #0d1b2e;
   color: white;
 }
 
 .test-area {
-  margin: 0 auto;
+  margin: auto;
   max-width: 550px;
-  margin-bottom: 4em;
-  padding: 0 2em;
+  margin-bottom: 3em;
+  padding: 2 2em;
 }
 
 #origin-text {
@@ -136,17 +121,14 @@ body {
   background-color: #ededed;
 }
 
+.center {
+   margin: 0 auto;
+    width: 100%
+}
+
 #origin-text p {
   margin: 0;
   padding-bottom: 1em;
-}
-
-.test-wrapper {
-  display: flex;
-}
-
-.test-wrapper textarea {
-  flex: 1;
 }
 
 .timer {
@@ -154,17 +136,18 @@ body {
   font-weight: bold;
 }
 
-#reset {
-  padding: 0.5em 1em;
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #e95d0f;
-  background: white;
-  border: 10px solid #e95d0f;
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 30%;
+    margin-left: 30em;
+}
+.flex-parent {
+  display: flex;
 }
 
-#reset:hover {
-  color: white;
-  background-color: #e95d0f;
+.jc-center {
+  justify-content: center;
 }
 </style>
