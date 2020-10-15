@@ -24,7 +24,14 @@ io.on('connection', (socket) => {
   })
 
   socket.on('sendAnswer', (data) => {
-    answer.push(data)
+    console.log(data);
+    console.log(users);
+    users.map(el => {
+      if (el.username === data.username) {
+        return el.score = data.score
+      }
+    })
+    io.emit('userConnected', users)
   })
 
   socket.on('disconnect', () => {
