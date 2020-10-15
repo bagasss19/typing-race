@@ -47,11 +47,12 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "PlayRoom",
   data() {
     return {
-      testText: "type test lorem ipsum",
+      // testText: "",
       testAreaInput: "",
       spellCheck: false,
       borderColor: "grey",
@@ -62,7 +63,11 @@ export default {
       this.testAreaInput = "";
     },
   },
-  computed: {},
+  computed: {
+    testText() {
+      return this.$store.state.quotes.quote;
+    },
+  },
   watch: {
     testAreaInput() {
       console.log(this.testAreaInput);
@@ -86,6 +91,9 @@ export default {
         }
       }
     },
+  },
+  created() {
+    this.$store.dispatch("fetchQuotes");
   },
 };
 </script>
