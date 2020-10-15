@@ -9,11 +9,19 @@ const baseUrl = 'http://localhost:3000'
 
 export default new Vuex.Store({
   state: {
-    quotes: ""
+    quotes: "",
+    users: [],
+    quote: ''
   },
   mutations: {
     SET_QUOTES(state, payload) {
       state.quotes = payload
+    },
+    'SOCKET_USER_CONNECTED' (state, payload) {
+      state.users = payload
+    },
+    'SOCKET_QUOTE_RECEIVED' (state, payload) {
+      state.quote = payload
     }
   },
   actions: {
@@ -34,6 +42,7 @@ export default new Vuex.Store({
           console.log(err.response, '<< fetch products err response index')
         })
     },
+
   },
   modules: {
   }

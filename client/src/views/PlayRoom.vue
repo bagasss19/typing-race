@@ -12,6 +12,7 @@
         <div class="intro">
           <h1>Player: {{ playerName }}</h1>
           <h1>Score: {{ score }}</h1>
+          <button @click="getQuote" v-if="users.length>1">Play the game</button>
         </div>
         <section class="test-area">
           <div id="origin-text">
@@ -58,23 +59,27 @@ export default {
       spellCheck: false,
       borderColor: "grey",
       score: 0,
-      playerName: ''
+      playerName: '',
     };
   },
   methods: {
     reset() {
       this.testAreaInput = "";
     },
-  },
-  sockets: {
-    userConnected (data) {
-      console.log(data)
+    getQuote () {
+      this.$socket.emit('getQuote')
     }
   },
   computed: {
-    testText() {
-      return this.$store.state.quotes.quote;
+    // testText() {
+      //   return this.$store.state.quotes.quote;
+    // },
+    users () {
+      return this.$store.state.users
     },
+    testText () {
+      return this.$store.state.quote
+    }
   },
   watch: {
     testAreaInput() {
@@ -86,6 +91,7 @@ export default {
       );
 
       if (this.testAreaInput == this.testText) {
+        this.getQuote()
         this.score += 10
         const payload = {
           username: this.playerName,
@@ -109,7 +115,7 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch("fetchQuotes");
+    // this.$store.dispatch("fetchQuotes");
     this.playerName = localStorage.username
   },
 };
