@@ -53,11 +53,12 @@ export default {
   methods: {
     submitUsername () {
       const payload = {
-        username: this.username
+        username: this.username,
+        score: 0
       }
       this.$socket.emit('userConnect', payload)
       localStorage.setItem('username', payload.username)
-      this.$router.push({ name: 'Home' })
+      this.$router.push({ name: 'PlayRoom' })
     }
   }
 }

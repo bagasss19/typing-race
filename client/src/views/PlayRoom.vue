@@ -10,7 +10,9 @@
       </header>
       <main class="main">
         <div class="intro">
-          <h1>Player: IkhsanGama</h1>
+          <h1>Player: {{ playerName }}</h1>
+          <h1>Score: {{ score }}</h1>
+          <button @click="getQuote" v-if="users.length>1">Play the game</button>
         </div>
         <section class="test-area">
           <div id="origin-text">
@@ -47,22 +49,38 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "PlayRoom",
   data() {
     return {
-      testText: "type test lorem ipsum",
+      // testText: "",
       testAreaInput: "",
       spellCheck: false,
       borderColor: "grey",
+      score: 0,
+      playerName: '',
     };
   },
   methods: {
     reset() {
       this.testAreaInput = "";
     },
+    getQuote () {
+      this.$socket.emit('getQuote')
+    }
   },
-  computed: {},
+  computed: {
+    // testText() {
+      //   return this.$store.state.quotes.quote;
+    // },
+    users () {
+      return this.$store.state.users
+    },
+    testText () {
+      return this.$store.state.quote
+    }
+  },
   watch: {
     testAreaInput() {
       console.log(this.testAreaInput);
@@ -73,8 +91,17 @@ export default {
       );
 
       if (this.testAreaInput == this.testText) {
-        console.log("finish");
+        this.getQuote()
+        this.score += 10
+        const payload = {
+          username: this.playerName,
+          answer: this.testAreaInput,
+          score: this.score
+        }
+        console.log(payload, "<<<INI PAYLOAD");
+        this.$socket.emit('sendAnswer', payload)
         this.borderColor = "green";
+        this.testAreaInput = ''
         // clearInterval(interval);
       } else {
         if (this.testAreaInput == originTextMatch) {
@@ -86,6 +113,10 @@ export default {
         }
       }
     },
+  },
+  created() {
+    // this.$store.dispatch("fetchQuotes");
+    this.playerName = localStorage.username
   },
 };
 </script>
