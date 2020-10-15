@@ -10,9 +10,27 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 let users = []
+let answer = []
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  let userData = null;
+  socket.on('userConnect', (data) => {
+    console.log('someone-connected test', data);
+    users.push(data)
+    userData = data
+    io.emit('userConnected', users)
+  })
 
+  socket.on('sendAnswer', (data) => {
+    answer.push(data)
+  })
+
+  socket.on('disconnect', () => {
+    console.log(userData, "disconnect");
+    // console.log(users);
+    // let indexDisconnectedUser = users.indexOf(userData)
+    // let removed = users.splice(indexDisconnectedUser,1)
+    // console.log(users)
+  })
 })
 
 http.listen(PORT, () => console.log('http://localhost:' + PORT))
