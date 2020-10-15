@@ -1,7 +1,12 @@
 <template>
   <div>
     <form @submit.prevent="submitUsername">
-      <input required v-model="username" type="text" placeholder="insert your name">
+      <input
+        required
+        v-model="username"
+        type="text"
+        placeholder="insert your name"
+      />
       <button type="submit">Play</button>
     </form>
   </div>
@@ -9,26 +14,25 @@
 
 <script>
 export default {
-  name: 'Login',
-  data () {
+  name: "Login",
+  data() {
     return {
-      username: ''
-    }
+      username: "",
+    };
   },
   methods: {
-    submitUsername () {
+    submitUsername() {
       const payload = {
         username: this.username,
-        score: 0
-      }
-      this.$socket.emit('userConnect', payload)
-      localStorage.setItem('username', payload.username)
-      this.$router.push({ name: 'Home' })
-    }
-  }
-}
+        score: 0,
+      };
+      this.$socket.emit("userConnect", payload);
+      localStorage.setItem("username", payload.username);
+      this.$router.push({ name: "Rooms" });
+    },
+  },
+};
 </script>
 
 <style>
-
 </style>

@@ -12,15 +12,28 @@ app.use(express.json())
 
 app.get('/quoteApi', quoteApi)
 
+let rooms = []
 let users = []
 let answer = []
 io.on('connection', (socket) => {
   let userData = null;
   socket.on('userConnect', (data) => {
-    console.log('someone-connected test', data);
-    users.push(data)
-    userData = data
-    io.emit('userConnected', users)
+    // console.log('someone-connected test', data);
+    // users.push(data)
+    // userData = data
+    // io.emit('userConnected', users)
+    socket.emit('get-rooms', rooms)
+  })
+
+  socket.on('create-room', data => {
+    console.log("create-room", data);
+    let room = {
+      name: data["room-name"],
+      users: [],
+      admin: data.admin
+    }
+    rooms.push(room)
+    io.emit("updated-room", rooms)
   })
 
   socket.on('sendAnswer', (data) => {
@@ -32,6 +45,18 @@ io.on('connection', (socket) => {
       }
     })
     io.emit('userConnected', users)
+  })
+
+  socket.on('join-room', (data) => {
+    console.log(data, "<< joinroom payload")
+    console.log(rooms, "<< roooms");
+    socket.join(data["room-name"], function () {
+      let roomIndex = rooms.findIndex((i) => i.name == data["room-name"])
+      console.log(roomIndex);
+      rooms[roomIndex]['users'].push(data.username)
+      console.log(rooms, "<< ini room");
+      io.sockets.in(data["room-name"]).emit("room-detail", rooms[roomIndex])
+    })
   })
 
   socket.on('disconnect', () => {
