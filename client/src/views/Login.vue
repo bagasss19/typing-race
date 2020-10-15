@@ -23,7 +23,7 @@ export default {
       }
       this.$socket.emit('userConnect', payload)
       localStorage.setItem('username', payload.username)
-      this.$router.push({ name: 'Home' })
+      this.$router.push({ name: 'PlayRoom' })
     }
   }
 }
