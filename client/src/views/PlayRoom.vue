@@ -12,7 +12,13 @@
         <div class="intro">
           <h1>Player: {{ playerName }}</h1>
           <h1>Score: {{ score }}</h1>
-          <button @click="getQuote" v-if="users.length>1">Play the game</button>
+          <!-- <button @click="getQuote" v-if="users.length > 1"> -->
+          <button @click="getQuote" v-if="room.admin == this.playerName">
+            Play the game
+          </button>
+          <button @click="getQuote" v-if="room.admin == this.playerName">
+            Play the game
+          </button>
         </div>
         <section class="test-area">
           <div id="origin-text">
@@ -54,57 +60,54 @@ export default {
   name: "PlayRoom",
   data() {
     return {
-      // testText: "",
+      room: {},
       testAreaInput: "",
       spellCheck: false,
       borderColor: "grey",
       score: 0,
-      playerName: '',
+      playerName: "",
     };
   },
-  sockets : {
-    win () {
-      this.showWinningMessage()
+  sockets: {
+    "room-detail"(data) {
+      console.log(data, "trigger room-detail");
+      this.room = data;
     },
-    lose () {
-      this.showLosingMessage()
-    }
+    win() {
+      this.showWinningMessage();
+    },
+    lose() {
+      this.showLosingMessage();
+    },
   },
   methods: {
     reset() {
       this.testAreaInput = "";
     },
-    getQuote () {
-      this.$socket.emit('getQuote')
+    getQuote() {
+      this.$socket.emit("getQuote");
     },
-    showWinningMessage () {
+    showWinningMessage() {
       console.log("winning");
-      this.$swal.fire(
-        'Good job!',
-        'You Win!',
-        'success'
-      )
+      this.$swal.fire("Good job!", "You Win!", "success");
     },
-    showLosingMessage () {
+    showLosingMessage() {
       console.log("losing");
       this.$swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'You Lose!',
-        footer: '<a href>Why do I have this issue?</a>'
-      })
-    }
+        icon: "error",
+        title: "Oops...",
+        text: "You Lose!",
+        footer: "<a href>Why do I have this issue?</a>",
+      });
+    },
   },
   computed: {
-    // testText() {
-      //   return this.$store.state.quotes.quote;
-    // },
-    users () {
-      return this.$store.state.users
+    users() {
+      return this.$store.state.users;
     },
-    testText () {
-      return this.$store.state.quote
-    }
+    testText() {
+      return this.$store.state.quote;
+    },
   },
   watch: {
     testAreaInput() {
@@ -116,17 +119,17 @@ export default {
       );
 
       if (this.testAreaInput == this.testText) {
-        this.getQuote()
-        this.score += 10
+        this.getQuote();
+        this.score += 10;
         const payload = {
           username: this.playerName,
           answer: this.testAreaInput,
-          score: this.score
-        }
+          score: this.score,
+        };
         console.log(payload, "<<<INI PAYLOAD");
-        this.$socket.emit('sendAnswer', payload)
+        this.$socket.emit("sendAnswer", payload);
         this.borderColor = "green";
-        this.testAreaInput = ''
+        this.testAreaInput = "";
         // clearInterval(interval);
       } else {
         if (this.testAreaInput == originTextMatch) {
@@ -141,7 +144,7 @@ export default {
   },
   created() {
     // this.$store.dispatch("fetchQuotes");
-    this.playerName = localStorage.username
+    this.playerName = localStorage.username;
   },
 };
 </script>

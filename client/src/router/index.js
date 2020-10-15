@@ -24,7 +24,7 @@ const routes = [
     component: Rooms
   },
   {
-    path: '/playroom',
+    path: '/playroom/:name',
     name: 'PlayRoom',
     component: PlayRoom
   },

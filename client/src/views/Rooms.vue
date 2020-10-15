@@ -47,8 +47,9 @@ export default {
         "room-name": name,
         username: localStorage.username,
       };
+      console.log(payload["room-name"], "<< join roomName");
       this.$socket.emit("join-room", payload);
-      this.$router.push(`/playroom/${roomName}`);
+      this.$router.push(`/playroom/${name}`);
     },
     createRoom() {
       let payload = {
