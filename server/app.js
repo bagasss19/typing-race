@@ -4,10 +4,13 @@ const cors = require('cors')
 const PORT = process.env.PORT || 3000
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
+const quoteApi = require('./quoteApi')
 
 app.use(cors())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
+
+app.get('/quoteApi', quoteApi)
 
 let users = []
 let answer = []
@@ -21,6 +24,8 @@ io.on('connection', (socket) => {
   })
 
   socket.on('sendAnswer', (data) => {
+    console.log(data);
+    console.log(users);
     users.map(el => {
       if (el.username === data.username) {
         return el.score = data.score

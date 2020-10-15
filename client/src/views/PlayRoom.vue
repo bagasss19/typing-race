@@ -48,11 +48,12 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "PlayRoom",
   data() {
     return {
-      testText: "type test lorem ipsum",
+      // testText: "",
       testAreaInput: "",
       spellCheck: false,
       borderColor: "grey",
@@ -65,15 +66,16 @@ export default {
       this.testAreaInput = "";
     },
   },
-  created () {
-    this.playerName = localStorage.username
-  },
   sockets: {
     userConnected (data) {
       console.log(data)
     }
   },
-  computed: {},
+  computed: {
+    testText() {
+      return this.$store.state.quotes.quote;
+    },
+  },
   watch: {
     testAreaInput() {
       console.log(this.testAreaInput);
@@ -90,6 +92,7 @@ export default {
           answer: this.testAreaInput,
           score: this.score
         }
+        console.log(payload, "<<<INI PAYLOAD");
         this.$socket.emit('sendAnswer', payload)
         this.borderColor = "green";
         this.testAreaInput = ''
@@ -104,6 +107,10 @@ export default {
         }
       }
     },
+  },
+  created() {
+    this.$store.dispatch("fetchQuotes");
+    this.playerName = localStorage.username
   },
 };
 </script>
