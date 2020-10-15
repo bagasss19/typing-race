@@ -10,7 +10,8 @@
       </header>
       <main class="main">
         <div class="intro">
-          <h1>Player: IkhsanGama</h1>
+          <h1>Player: {{ playerName }}</h1>
+          <h1>Score: {{ score }}</h1>
         </div>
         <section class="test-area">
           <div id="origin-text">
@@ -55,12 +56,22 @@ export default {
       testAreaInput: "",
       spellCheck: false,
       borderColor: "grey",
+      score: 0,
+      playerName: ''
     };
   },
   methods: {
     reset() {
       this.testAreaInput = "";
     },
+  },
+  created () {
+    this.playerName = localStorage.username
+  },
+  sockets: {
+    userConnected (data) {
+      console.log(data)
+    }
   },
   computed: {},
   watch: {
@@ -73,7 +84,13 @@ export default {
       );
 
       if (this.testAreaInput == this.testText) {
-        console.log("finish");
+        this.score += 10
+        const payload = {
+          username: this.playerName,
+          answer: this.testAreaInput,
+          score: this.score
+        }
+        this.$socket.emit('sendAnswer', payload)
         this.borderColor = "green";
         // clearInterval(interval);
       } else {
