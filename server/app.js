@@ -25,11 +25,11 @@ io.on('connection', (socket) => {
   })
 
   socket.on('disconnect', () => {
-    console.log(userData, "disconnet");
-    console.log(users);
-    let indexDisconnectedUser = users.indexOf(userData)
-    let removed = users.splice(indexDisconnectedUser,1)
-    console.log(users)
+    console.log(userData, "disconnect");
+    // console.log(users);
+    // let indexDisconnectedUser = users.indexOf(userData)
+    // let removed = users.splice(indexDisconnectedUser,1)
+    // console.log(users)
   })
 })
 

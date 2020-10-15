@@ -21,6 +21,7 @@ export default {
         username: this.username
       }
       this.$socket.emit('userConnect', payload)
+      localStorage.setItem('username', payload.username)
       this.$router.push({ name: 'Home' })
     }
   }
