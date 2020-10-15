@@ -21,7 +21,7 @@ export default {
   name: "Home",
   data() {
     return {
-      rooms: [],
+      // rooms: [],
       roomName: "",
     };
   },
@@ -29,8 +29,13 @@ export default {
     "get-rooms"(data) {
       this.rooms = data;
     },
-    "updated-room"(data) {
-      this.rooms = data;
+    // "updated-room"(data) {
+    //   this.rooms = data;
+    // },
+  },
+  computed: {
+    rooms() {
+      return this.$store.state.rooms;
     },
   },
   created() {

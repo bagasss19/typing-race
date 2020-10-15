@@ -10,12 +10,10 @@
       </header>
       <main class="main">
         <div class="intro">
+          {{ this.room }}
           <h1>Player: {{ playerName }}</h1>
           <h1>Score: {{ score }}</h1>
           <!-- <button @click="getQuote" v-if="users.length > 1"> -->
-          <button @click="getQuote" v-if="room.admin == this.playerName">
-            Play the game
-          </button>
           <button @click="getQuote" v-if="room.admin == this.playerName">
             Play the game
           </button>
@@ -41,10 +39,6 @@
             </textarea>
           </div>
           <div>
-            <!-- <section id="clock">
-              <div class="timer">00:00:00</div>
-            </section> -->
-
             <button @click="reset" id="reset">Start over</button>
           </div>
         </section>
@@ -60,7 +54,7 @@ export default {
   name: "PlayRoom",
   data() {
     return {
-      room: {},
+      // room: {},
       testAreaInput: "",
       spellCheck: false,
       borderColor: "grey",
@@ -69,10 +63,6 @@ export default {
     };
   },
   sockets: {
-    "room-detail"(data) {
-      console.log(data, "trigger room-detail");
-      this.room = data;
-    },
     win() {
       this.showWinningMessage();
     },
@@ -97,11 +87,16 @@ export default {
         icon: "error",
         title: "Oops...",
         text: "You Lose!",
-        footer: "<a href>Why do I have this issue?</a>",
       });
     },
   },
   computed: {
+    room() {
+      return this.$store.state.room;
+    },
+    rooms() {
+      return this.$store.state.rooms;
+    },
     users() {
       return this.$store.state.users;
     },
@@ -122,6 +117,7 @@ export default {
         this.getQuote();
         this.score += 10;
         const payload = {
+          "room-name": this.room.name,
           username: this.playerName,
           answer: this.testAreaInput,
           score: this.score,
