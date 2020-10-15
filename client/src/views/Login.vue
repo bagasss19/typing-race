@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-card custom-bg p-5 mb-5">
+  <div class="custom-card custom-bg p-5 mb-5 bg-login">
     <br>
     <h1>Typing Racer
       <br>
@@ -12,11 +12,11 @@
     </form>
     
     <br>
-    <img src="https://media.giphy.com/media/4N1BrUBPYlpYFUAmVI/giphy.gif">
+    <img src="https://media.giphy.com/media/Y0P6qNNkCyItnnx9c1/giphy.gif">
     <br>
     <br>
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
     Click me !
     </button>
     <br>
@@ -53,12 +53,11 @@ export default {
   methods: {
     submitUsername () {
       const payload = {
-        username: this.username,
-        score: 0
+        username: this.username
       }
       this.$socket.emit('userConnect', payload)
       localStorage.setItem('username', payload.username)
-      this.$router.push({ name: 'PlayRoom' })
+      this.$router.push({ name: 'Home' })
     }
   }
 }
