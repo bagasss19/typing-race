@@ -9,10 +9,15 @@ app.use(cors())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
+
+app.get('/', (req, res) => {
+  res.send('<h1>Hello world</h1>');
+});
+
 let users = []
 io.on('connection', (socket) => {
   console.log('a user connected');
-
+  io.emit('connect', {msg : 'user udah konek nih'})
 })
 
 http.listen(PORT, () => console.log('http://localhost:' + PORT))
