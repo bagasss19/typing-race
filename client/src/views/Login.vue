@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-card custom-bg p-5 mb-5">
+  <div class="custom-card custom-bg p-5 mb-5 bg-login">
     <br />
     <h1>
       Typing Racer
@@ -18,13 +18,13 @@
     </form>
 
     <br />
-    <img src="https://media.giphy.com/media/4N1BrUBPYlpYFUAmVI/giphy.gif" />
+    <img src="https://media.giphy.com/media/Y0P6qNNkCyItnnx9c1/giphy.gif" />
     <br />
     <br />
     <!-- Button trigger modal -->
     <button
       type="button"
-      class="btn btn-success"
+      class="btn btn-primary"
       data-toggle="modal"
       data-target="#exampleModalCenter"
     >

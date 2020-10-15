@@ -1,11 +1,12 @@
 body {
-  background-color: green;
+  background-color: #9c6b4a;
 }
+
 
 .custom-card{
   border-radius: 5rem;
 }
 
 .custom-bg {
-  background-color: rgba(254, 254, 254, 0.881);
+  background-color: #e0efe0;
 }
