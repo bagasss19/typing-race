@@ -1,40 +1,60 @@
 <template>
   <section id="playroom">
-    <div class="title-area bg-dark">
-      <h1 v-if="!isPlay">
-        Welcome, {{ playerName }}. Your goal is to duplicate the
-        provided text below, EXACTLY. Good Luck!
-      </h1>
-          <ScoreCard v-for="(user, i) in this.users" :key="i" :user="user">
+    <body>
+      <header class="title-area">
+        <h1>Test Your Typing Speed</h1>
+        <p>
+          Welcome to the TYPING RACE. Your goal is to duplicate the provided
+          text, EXACTLY, in the field below. Good Luck!
+        </p>
+      </header>
+      <main class="main">
+        <div class="intro">
+          <!-- {{ this.users }} -->
+          <div class="row">
+            <ScoreCard v-for="(user, i) in this.users" :key="i" :user="user">
             </ScoreCard>
-    </div>
-
-    <br /> <br><br><br><br><br>
-    <div class="test-area">
-        <p>{{ this.testText }}</p>
-    </div>
- <br><br>
-      <textarea v-model="testAreaInput" name="input" cols="50" rows="4" placeholder="Type here..."
-      :style="{
-              border: '12px solid ' + this.borderColor,
-              borderRadius: '10px',
-            }"
-      ></textarea>
-    <br><br>
-              <button
-              class="btn btn-warning"
+          </div>
+          <h1>Player: {{ playerName }}</h1>
+          <!-- <h1>Score: {{ score }}</h1> -->
+          <button
             @click="getQuote"
             v-if="users.length > 1 && users[0].username === playerName"
           >
+            <!-- <button @click="getQuote" v-if="room.admin == this.playerName"> -->
             Play the game
           </button>
-    <br>
-    <div>
-      <!-- <section id="clock">
-        <div class="timer">00:00:00</div>
-        </section> -->
-    </div>
-    <!-- .test-area -->
+        </div>
+        <section class="test-area">
+          <div id="origin-text" v-if="isLoaded === true">
+            <p class="unselectable">{{ this.testText }}</p>
+          </div>
+          <div v-else>
+            <button class="donutSpinner"></button>
+          </div>
+
+          <div
+            class="test-wrapper"
+            :style="{
+              border: '12px solid ' + this.borderColor,
+              borderRadius: '10px',
+            }"
+          >
+            <textarea
+              v-model="testAreaInput"
+              name="textarea"
+              rows="6"
+              placeholder="Start typing..."
+            >
+            </textarea>
+          </div>
+          <div>
+            <button @click="reset" id="reset">Start over</button>
+          </div>
+        </section>
+        <!-- .test-area -->
+      </main>
+    </body>
   </section>
 </template>
 
@@ -48,13 +68,11 @@ export default {
   },
   data() {
     return {
-      // room: {},
+      isLoaded: false,
       testAreaInput: "",
       spellCheck: false,
       borderColor: "grey",
-      score: 0,
       playerName: "",
-      isPlay : false
     };
   },
   sockets: {
@@ -64,6 +82,9 @@ export default {
     lose() {
       this.showLosingMessage();
     },
+    changeLoadedStatus(payload) {
+      this.isLoaded = payload;
+    },
   },
   methods: {
     reset() {
@@ -71,10 +92,9 @@ export default {
     },
     getQuote() {
       this.$socket.emit("getQuote");
-      this.isPlay = true
     },
-     showWinningMessage () {
-      console.log("winning");
+    showWinningMessage() {
+      // console.log("winning");
       this.$swal.fire("Good job!", "You Win!", "success").then((result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
@@ -85,21 +105,13 @@ export default {
     showLosingMessage() {
       console.log("losing");
       this.$swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'You Lose!',
-        footer: '<a href>Why do I have this issue?</a>'
-      })
+        icon: "error",
+        title: "Oops...",
+        text: "You Lose!",
+      });
     },
-    logout() {
-      localStorage.clear();
-      this.$router.push({ name: "Login" });
-    }
   },
   computed: {
-    // testText() {
-    //   return this.$store.state.quotes.quote;
-    // },
     users() {
       return this.$store.state.users;
     },
@@ -117,93 +129,83 @@ export default {
       );
 
       if (this.testAreaInput == this.testText) {
+        this.$socket.emit("isLoadedFalse");
         this.getQuote();
-        this.score += 10;
         const payload = {
-          // "room-name": this.room.name,
           username: this.playerName,
           answer: this.testAreaInput,
-          score: this.score,
+          score: 0,
         };
-        console.log(payload, "<<<INI PAYLOAD");
+        // console.log(payload, "<<<INI PAYLOAD");
         this.$socket.emit("sendAnswer", payload);
         this.borderColor = "green";
         this.testAreaInput = "";
-        // clearInterval(interval);
       } else {
         if (this.testAreaInput == originTextMatch) {
-          console.log("true");
-          this.borderColor = "green";
-          
+          // console.log("true");
+          this.borderColor = "blue";
         } else {
-          console.log("false");
+          // console.log("false");
           this.borderColor = "red";
         }
       }
     },
-    getCurrentQuoteState () {
-      return this.$store.state.quote
-    }
+    getCurrentQuoteState() {
+      return this.$store.state.quote;
+    },
   },
   created() {
     // this.$store.dispatch("fetchQuotes");
     this.playerName = localStorage.username;
-    this.getCurrentQuoteState()
+    this.getCurrentQuoteState();
   },
-  beforeRouteUpdate (to, from, next) {
+  beforeRouteUpdate(to, from, next) {
     // just use `this`
-    return this.$store.state.quote
+    return this.$store.state.quote;
     console.log(this.$store.state.quote);
-    next()
-  }
-
+    next();
+  },
 };
 </script>
 
 <style>
 /* Typography */
 
+body,
+button,
 input,
 select,
-p {
-  font-family: "Balsamiq Sans", cursive;
-  text-align: center;
-  font-size: 25px;
-  color: black;
-  margin-bottom: 1.5em;
-  background-color: wheat;
-}
-/* textarea {
-  font-family: 'Balsamiq Sans', cursive;
+textarea {
+  font-family: "Source Sans Pro", "Helvetica", Arial, sans-serif;
   font-size: 18px;
   line-height: 1.5;
-} */
+}
 
 h1 {
-  text-align: center;
-  font-size: 20px;
-  font-family: "Balsamiq Sans", cursive;
-  color: black;
+  clear: both;
+}
+
+p {
+  margin-bottom: 1.5em;
 }
 
 /* Layout */
 body {
-  /* background: cornflowerblue; */
-  background-image: url("https://images7.alphacoders.com/896/thumb-1920-896758.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
 .title-area {
-  padding: 1em 0.5em;
+  padding: 1em 2em;
+  background-color: #0d1b2e;
+  color: white;
 }
 
 .test-area {
-  margin: auto;
+  margin: 0 auto;
   max-width: 550px;
-  margin-bottom: 3em;
-  padding: 2 2em;
+  margin-bottom: 4em;
+  padding: 0 2em;
 }
 
 #origin-text {
@@ -212,14 +214,17 @@ body {
   background-color: #ededed;
 }
 
-.center {
-  margin: 0 auto;
-  width: 100%;
-}
-
 #origin-text p {
   margin: 0;
   padding-bottom: 1em;
+}
+
+.test-wrapper {
+  display: flex;
+}
+
+.test-wrapper textarea {
+  flex: 1;
 }
 
 .timer {
@@ -227,15 +232,44 @@ body {
   font-weight: bold;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 30%;
-  margin-left: 30em;
+.donutSpinner {
+  display: inline-block;
+  border: 4px solid hsl(222, 100%, 95%);
+  border-left-color: hsl(243, 80%, 62%);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: donut-spin 1.2s linear infinite;
 }
 
-.checked {
-  color: orange;
+@keyframes donut-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.unselectable {
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#reset {
+  padding: 0.5em 1em;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #e95d0f;
+  background: white;
+  border: 10px solid #e95d0f;
+}
+
+#reset:hover {
+  color: white;
+  background-color: #e95d0f;
 }
 </style>

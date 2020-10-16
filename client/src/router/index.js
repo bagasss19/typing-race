@@ -16,16 +16,6 @@ const routes = [
     name: 'Login',
     component: Login
   },
-  // {
-  //   path: '/rooms',
-  //   name: 'Rooms',
-  //   component: Rooms
-  // },
-  // {
-  //   path: '/playroom/:name',
-  //   name: 'PlayRoom',
-  //   component: PlayRoom
-  // },
   {
     path: '/about',
     name: 'About',

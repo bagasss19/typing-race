@@ -7,18 +7,6 @@
       width="50px"
       class="card-img-top"
     />
-    <!-- room:{
-      admin: ...,
-      users: [
-        {
-          username: a
-        },
-        {
-          username: b
-        },
-      ],
-      name: <nama roomnya>
-    } -->
     <div class="card-body">
       <h4 class="card-title">{{ this.user.username }}</h4>
       <h4 class="card-text">
