@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
     console.log('someone-connected test', data);
 
     users.push(data)
-    // userData = data
+    userData = data
     io.emit('USER_CONNECTED', users)
     // socket.emit('get-rooms', rooms)
   })
@@ -50,15 +50,19 @@ io.on('connection', (socket) => {
     // console.log(rooms[roomIndex]["users"][usernameIndex], "<< updated user sendAnswer");
     // io.emit("UPDATED_ROOMS", rooms)
     // io.emit("ROOM_DETAIL", rooms[roomIndex])
+    users.map(el => {
+      if (el.username === data.username) {
+        el.score += 10
+        if (el.score >= 50) {
+          socket.emit('win')
+          socket.broadcast.emit('lose')
+        }
+      }
+    })
     // if (data.score >= 50) {
     //   socket.emit('win')
     //   socket.broadcast.emit('lose')
     // }
-    users.map(el => {
-      if (el.username === data.username) {
-        return el.score = data.score
-      }
-    })
     io.emit('USER_CONNECTED', users)
   })
 
@@ -97,6 +101,11 @@ io.on('connection', (socket) => {
     // let indexDisconnectedUser = users.indexOf(userData)
     // let removed = users.splice(indexDisconnectedUser,1)
     // console.log(users)
+    if (userData) {
+      let indexDisconnectedUser = users.indexOf(userData)
+      let removed = users.splice(indexDisconnectedUser,1)
+      io.emit('USER_CONNECTED', users)
+    }
   })
 
   socket.on('resetScore', (data) => {
