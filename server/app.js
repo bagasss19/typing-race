@@ -52,8 +52,8 @@ io.on('connection', (socket) => {
       })
   })
 
-  socket.on('disconnect', () => {
-    console.log(userData, "disconnect");
+  socket.on('disconnect', (data) => {
+    console.log(data, "disconnect");
     // console.log(users);
     // let indexDisconnectedUser = users.indexOf(userData)
     // let removed = users.splice(indexDisconnectedUser,1)

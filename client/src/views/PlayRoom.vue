@@ -141,6 +141,7 @@ export default {
   },
   created() {
     // this.$store.dispatch("fetchQuotes");
+    this.checkRefresh()
     this.playerName = localStorage.username
   },
 };
