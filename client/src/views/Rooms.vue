@@ -4,11 +4,15 @@
     <form @submit.prevent="createRoom">
       <input v-model="roomName" type="text" placeholder="create a room" />
     </form>
-    <div v-if="rooms.length != 0">
-      <div v-for="(room, i) in rooms" :key="i">
+    <div v-if="this.rooms.length != 0">
+      <div class="row">
+        <RoomCard v-for="(room, i) in this.rooms" :key="i" :room="room">
+        </RoomCard>
+      </div>
+      <!-- <div v-for="(room, i) in this.rooms" :key="i">
         <h4>{{ room.name }}</h4>
         <button @click="joinRoom(room.name)">Join Room</button>
-      </div>
+      </div> -->
     </div>
     <div v-else>
       <h1>No Room</h1>
@@ -17,8 +21,12 @@
 </template>
 
 <script>
+import RoomCard from "@/components/RoomCard.vue";
 export default {
   name: "Home",
+  components: {
+    RoomCard,
+  },
   data() {
     return {
       // rooms: [],
@@ -26,8 +34,8 @@ export default {
     };
   },
   sockets: {
-    "get-rooms"(data) {
-      this.rooms = data;
+    "get-rooms"() {
+      return this.$store.state.rooms;
     },
     // "updated-room"(data) {
     //   this.rooms = data;
