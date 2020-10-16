@@ -1,57 +1,40 @@
 <template>
   <section id="playroom">
-    <body>
-      <header class="title-area">
-        <h1>Test Your Typing Speed</h1>
-        <p>
-          Welcome to the TYPING RACE. Your goal is to duplicate the provided
-          text, EXACTLY, in the field below. Good Luck!
-        </p>
-      </header>
-      <main class="main">
-        <div class="intro">
-          <!-- {{ this.users }} -->
-          <div class="row">
-            <ScoreCard v-for="(user, i) in this.users" :key="i" :user="user">
+    <div class="title-area bg-dark">
+      <h1 v-if="!isPlay">
+        Welcome, {{ playerName }}. Your goal is to duplicate the
+        provided text below, EXACTLY. Good Luck!
+      </h1>
+          <ScoreCard v-for="(user, i) in this.users" :key="i" :user="user">
             </ScoreCard>
-          </div>
-          <h1>Player: {{ playerName }}</h1>
-          <!-- <h1>Score: {{ score }}</h1> -->
-          <button
-            @click="getQuote"
-            v-if="users.length > 1 && users[0].username === playerName"
-          >
-            <!-- <button @click="getQuote" v-if="room.admin == this.playerName"> -->
-            Play the game
-          </button>
-        </div>
-        <section class="test-area">
-          <div id="origin-text">
-            <p>{{ this.testText }}</p>
-          </div>
+    </div>
 
-          <div
-            class="test-wrapper"
-            :style="{
+    <br /> <br><br><br><br><br>
+    <div class="test-area">
+        <p>{{ this.testText }}</p>
+    </div>
+ <br><br>
+      <textarea v-model="testAreaInput" name="input" cols="50" rows="4" placeholder="Type here..."
+      :style="{
               border: '12px solid ' + this.borderColor,
               borderRadius: '10px',
             }"
+      ></textarea>
+    <br><br>
+              <button
+              class="btn btn-warning"
+            @click="getQuote"
+            v-if="users.length > 1 && users[0].username === playerName"
           >
-            <textarea
-              v-model="testAreaInput"
-              name="textarea"
-              rows="6"
-              placeholder="Start typing..."
-            >
-            </textarea>
-          </div>
-          <div>
-            <button @click="reset" id="reset">Start over</button>
-          </div>
-        </section>
-        <!-- .test-area -->
-      </main>
-    </body>
+            Play the game
+          </button>
+    <br>
+    <div>
+      <!-- <section id="clock">
+        <div class="timer">00:00:00</div>
+        </section> -->
+    </div>
+    <!-- .test-area -->
   </section>
 </template>
 
@@ -69,8 +52,9 @@ export default {
       testAreaInput: "",
       spellCheck: false,
       borderColor: "grey",
-      // score: 0,
+      score: 0,
       playerName: "",
+      isPlay : false
     };
   },
   sockets: {
@@ -87,8 +71,9 @@ export default {
     },
     getQuote() {
       this.$socket.emit("getQuote");
+      this.isPlay = true
     },
-    showWinningMessage() {
+     showWinningMessage () {
       console.log("winning");
       this.$swal.fire("Good job!", "You Win!", "success").then((result) => {
         /* Read more about isConfirmed, isDenied below */
@@ -100,18 +85,20 @@ export default {
     showLosingMessage() {
       console.log("losing");
       this.$swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "You Lose!",
-      });
+        icon: 'error',
+        title: 'Oops...',
+        text: 'You Lose!',
+        footer: '<a href>Why do I have this issue?</a>'
+      })
     },
+    logout() {
+      localStorage.clear();
+      this.$router.push({ name: "Login" });
+    }
   },
   computed: {
-    // room() {
-    //   return this.$store.state.room;
-    // },
-    // rooms() {
-    //   return this.$store.state.rooms;
+    // testText() {
+    //   return this.$store.state.quotes.quote;
     // },
     users() {
       return this.$store.state.users;
@@ -131,12 +118,12 @@ export default {
 
       if (this.testAreaInput == this.testText) {
         this.getQuote();
-        // this.score += 10;
+        this.score += 10;
         const payload = {
           // "room-name": this.room.name,
           username: this.playerName,
           answer: this.testAreaInput,
-          score: 0,
+          score: this.score,
         };
         console.log(payload, "<<<INI PAYLOAD");
         this.$socket.emit("sendAnswer", payload);
@@ -146,7 +133,8 @@ export default {
       } else {
         if (this.testAreaInput == originTextMatch) {
           console.log("true");
-          this.borderColor = "blue";
+          this.borderColor = "green";
+          
         } else {
           console.log("false");
           this.borderColor = "red";
@@ -175,41 +163,47 @@ export default {
 <style>
 /* Typography */
 
-body,
-button,
 input,
 select,
-textarea {
-  font-family: "Source Sans Pro", "Helvetica", Arial, sans-serif;
+p {
+  font-family: "Balsamiq Sans", cursive;
+  text-align: center;
+  font-size: 25px;
+  color: black;
+  margin-bottom: 1.5em;
+  background-color: wheat;
+}
+/* textarea {
+  font-family: 'Balsamiq Sans', cursive;
   font-size: 18px;
   line-height: 1.5;
-}
+} */
 
 h1 {
-  clear: both;
-}
-
-p {
-  margin-bottom: 1.5em;
+  text-align: center;
+  font-size: 20px;
+  font-family: "Balsamiq Sans", cursive;
+  color: black;
 }
 
 /* Layout */
 body {
-  margin: 0;
-  padding: 0;
+  /* background: cornflowerblue; */
+  background-image: url("https://images7.alphacoders.com/896/thumb-1920-896758.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  text-align: center;
 }
 
 .title-area {
-  padding: 1em 2em;
-  background-color: #0d1b2e;
-  color: white;
+  padding: 1em 0.5em;
 }
 
 .test-area {
-  margin: 0 auto;
+  margin: auto;
   max-width: 550px;
-  margin-bottom: 4em;
-  padding: 0 2em;
+  margin-bottom: 3em;
+  padding: 2 2em;
 }
 
 #origin-text {
@@ -218,17 +212,14 @@ body {
   background-color: #ededed;
 }
 
+.center {
+  margin: 0 auto;
+  width: 100%;
+}
+
 #origin-text p {
   margin: 0;
   padding-bottom: 1em;
-}
-
-.test-wrapper {
-  display: flex;
-}
-
-.test-wrapper textarea {
-  flex: 1;
 }
 
 .timer {
@@ -236,17 +227,15 @@ body {
   font-weight: bold;
 }
 
-#reset {
-  padding: 0.5em 1em;
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #e95d0f;
-  background: white;
-  border: 10px solid #e95d0f;
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 30%;
+  margin-left: 30em;
 }
 
-#reset:hover {
-  color: white;
-  background-color: #e95d0f;
+.checked {
+  color: orange;
 }
 </style>

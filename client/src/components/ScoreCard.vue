@@ -22,7 +22,11 @@
     <div class="card-body">
       <h4 class="card-title">{{ this.user.username }}</h4>
       <h4 class="card-text">
-        <b>{{ this.user.score }}</b>
+        <span class="fa fa-star checked" v-if="this.user.score>=10"></span>
+        <span class="fa fa-star checked" v-if="this.user.score>=20"></span>
+        <span class="fa fa-star checked" v-if="this.user.score>=30"></span>
+        <span class="fa fa-star checked" v-if="this.user.score>=40"></span>
+        <span class="fa fa-star checked" v-if="this.user.score>=50"></span>
       </h4>
     </div>
   </div>
@@ -36,4 +40,7 @@ export default {
 </script>
 
 <style>
+.checked {
+  color: orange;
+}
 </style>
