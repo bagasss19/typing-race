@@ -10,11 +10,14 @@
       </header>
       <main class="main">
         <div class="intro">
-          {{ this.room }}
+          {{ this.users }}
           <h1>Player: {{ playerName }}</h1>
           <h1>Score: {{ score }}</h1>
-          <!-- <button @click="getQuote" v-if="users.length > 1"> -->
-          <button @click="getQuote" v-if="room.admin == this.playerName">
+          <button
+            @click="getQuote"
+            v-if="users.length > 1 && users[0].username === playerName"
+          >
+            <!-- <button @click="getQuote" v-if="room.admin == this.playerName"> -->
             Play the game
           </button>
         </div>
@@ -79,7 +82,14 @@ export default {
     },
     showWinningMessage() {
       console.log("winning");
-      this.$swal.fire("Good job!", "You Win!", "success");
+      this.$swal.fire("Good job!", "You Win!", "success").then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          this.$socket.emit("resetScore");
+        } else if (result.isDenied) {
+          Swal.fire("Changes are not saved", "", "info");
+        }
+      });
     },
     showLosingMessage() {
       console.log("losing");
@@ -91,12 +101,12 @@ export default {
     },
   },
   computed: {
-    room() {
-      return this.$store.state.room;
-    },
-    rooms() {
-      return this.$store.state.rooms;
-    },
+    // room() {
+    //   return this.$store.state.room;
+    // },
+    // rooms() {
+    //   return this.$store.state.rooms;
+    // },
     users() {
       return this.$store.state.users;
     },
@@ -117,7 +127,7 @@ export default {
         this.getQuote();
         this.score += 10;
         const payload = {
-          "room-name": this.room.name,
+          // "room-name": this.room.name,
           username: this.playerName,
           answer: this.testAreaInput,
           score: this.score,
