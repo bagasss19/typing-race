@@ -26,8 +26,11 @@
           </button>
         </div>
         <section class="test-area">
-          <div id="origin-text">
-            <p>{{ this.testText }}</p>
+          <div id="origin-text" v-if="isLoaded === true">
+            <p class="unselectable">{{ this.testText }}</p>
+          </div>
+          <div v-else>
+            <button class="donutSpinner"></button>
           </div>
 
           <div
@@ -65,11 +68,10 @@ export default {
   },
   data() {
     return {
-      // room: {},
+      isLoaded: false,
       testAreaInput: "",
       spellCheck: false,
       borderColor: "grey",
-      // score: 0,
       playerName: "",
     };
   },
@@ -80,6 +82,9 @@ export default {
     lose() {
       this.showLosingMessage();
     },
+    changeLoadedStatus(payload) {
+      this.isLoaded = payload;
+    },
   },
   methods: {
     reset() {
@@ -89,7 +94,7 @@ export default {
       this.$socket.emit("getQuote");
     },
     showWinningMessage() {
-      console.log("winning");
+      // console.log("winning");
       this.$swal.fire("Good job!", "You Win!", "success").then((result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
@@ -107,12 +112,6 @@ export default {
     },
   },
   computed: {
-    // room() {
-    //   return this.$store.state.room;
-    // },
-    // rooms() {
-    //   return this.$store.state.rooms;
-    // },
     users() {
       return this.$store.state.users;
     },
@@ -130,45 +129,42 @@ export default {
       );
 
       if (this.testAreaInput == this.testText) {
+        this.$socket.emit("isLoadedFalse");
         this.getQuote();
-        // this.score += 10;
         const payload = {
-          // "room-name": this.room.name,
           username: this.playerName,
           answer: this.testAreaInput,
           score: 0,
         };
-        console.log(payload, "<<<INI PAYLOAD");
+        // console.log(payload, "<<<INI PAYLOAD");
         this.$socket.emit("sendAnswer", payload);
         this.borderColor = "green";
         this.testAreaInput = "";
-        // clearInterval(interval);
       } else {
         if (this.testAreaInput == originTextMatch) {
-          console.log("true");
+          // console.log("true");
           this.borderColor = "blue";
         } else {
-          console.log("false");
+          // console.log("false");
           this.borderColor = "red";
         }
       }
     },
-    getCurrentQuoteState () {
-      return this.$store.state.quote
-    }
+    getCurrentQuoteState() {
+      return this.$store.state.quote;
+    },
   },
   created() {
     // this.$store.dispatch("fetchQuotes");
     this.playerName = localStorage.username;
-    this.getCurrentQuoteState()
+    this.getCurrentQuoteState();
   },
-  beforeRouteUpdate (to, from, next) {
+  beforeRouteUpdate(to, from, next) {
     // just use `this`
-    return this.$store.state.quote
+    return this.$store.state.quote;
     console.log(this.$store.state.quote);
-    next()
-  }
-
+    next();
+  },
 };
 </script>
 
@@ -234,6 +230,33 @@ body {
 .timer {
   font-size: 3em;
   font-weight: bold;
+}
+
+.donutSpinner {
+  display: inline-block;
+  border: 4px solid hsl(222, 100%, 95%);
+  border-left-color: hsl(243, 80%, 62%);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: donut-spin 1.2s linear infinite;
+}
+
+@keyframes donut-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.unselectable {
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 #reset {
