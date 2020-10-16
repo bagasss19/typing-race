@@ -16,7 +16,7 @@
             </ScoreCard>
           </div>
           <h1>Player: {{ playerName }}</h1>
-          <h1>Score: {{ score }}</h1>
+          <!-- <h1>Score: {{ score }}</h1> -->
           <button
             @click="getQuote"
             v-if="users.length > 1 && users[0].username === playerName"
@@ -69,7 +69,7 @@ export default {
       testAreaInput: "",
       spellCheck: false,
       borderColor: "grey",
-      score: 0,
+      // score: 0,
       playerName: "",
     };
   },
@@ -131,12 +131,12 @@ export default {
 
       if (this.testAreaInput == this.testText) {
         this.getQuote();
-        this.score += 10;
+        // this.score += 10;
         const payload = {
           // "room-name": this.room.name,
           username: this.playerName,
           answer: this.testAreaInput,
-          score: this.score,
+          score: 0,
         };
         console.log(payload, "<<<INI PAYLOAD");
         this.$socket.emit("sendAnswer", payload);
@@ -153,11 +153,22 @@ export default {
         }
       }
     },
+    getCurrentQuoteState () {
+      return this.$store.state.quote
+    }
   },
   created() {
     // this.$store.dispatch("fetchQuotes");
     this.playerName = localStorage.username;
+    this.getCurrentQuoteState()
   },
+  beforeRouteUpdate (to, from, next) {
+    // just use `this`
+    return this.$store.state.quote
+    console.log(this.$store.state.quote);
+    next()
+  }
+
 };
 </script>
 
