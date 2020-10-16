@@ -10,7 +10,11 @@
       </header>
       <main class="main">
         <div class="intro">
-          {{ this.users }}
+          <!-- {{ this.users }} -->
+          <div class="row">
+            <ScoreCard v-for="(user, i) in this.users" :key="i" :user="user">
+            </ScoreCard>
+          </div>
           <h1>Player: {{ playerName }}</h1>
           <h1>Score: {{ score }}</h1>
           <button
@@ -52,9 +56,13 @@
 </template>
 
 <script>
+import ScoreCard from "@/components/ScoreCard.vue";
 import { mapState } from "vuex";
 export default {
   name: "PlayRoom",
+  components: {
+    ScoreCard,
+  },
   data() {
     return {
       // room: {},
@@ -86,8 +94,6 @@ export default {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
           this.$socket.emit("resetScore");
-        } else if (result.isDenied) {
-          Swal.fire("Changes are not saved", "", "info");
         }
       });
     },

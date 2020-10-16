@@ -20,8 +20,13 @@ io.on('connection', (socket) => {
   let userData = null;
   socket.on('userConnect', (data) => {
     console.log('someone-connected test', data);
-
-    users.push(data)
+    let isFound = false
+    users.map(user => {
+      if (user.username == data.username) {
+        isFound = true
+      }
+    })
+    if (!isFound) users.push(data)
     // userData = data
     io.emit('USER_CONNECTED', users)
     // socket.emit('get-rooms', rooms)
