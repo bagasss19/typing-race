@@ -1,7 +1,7 @@
 <template>
   <section id="playroom">
     <body>
-      <header class="title-area">
+      <header class="title-area text-center" >
         <h1>Test Your Typing Speed</h1>
         <p>
           Welcome to the TYPING RACE. Your goal is to duplicate the provided
@@ -9,9 +9,9 @@
         </p>
       </header>
       <main class="main">
-        <div class="intro">
+        <div class="intro text-center">
           <!-- {{ this.users }} -->
-          <div class="row">
+          <div class="row" style="display: flex; justify-content: center">
             <ScoreCard v-for="(user, i) in this.users" :key="i" :user="user">
             </ScoreCard>
           </div>
@@ -26,13 +26,13 @@
           </button>
         </div>
         <section class="test-area">
-          <div id="origin-text" v-if="isLoaded === true">
+          <div class="text-center" id="origin-text" v-if="isLoaded === true">
             <p class="unselectable">{{ this.testText }}</p>
           </div>
-          <div v-else>
+          <div v-else class="text-center">
             <button class="donutSpinner"></button>
           </div>
-
+          <br>
           <div
             class="test-wrapper"
             :style="{
