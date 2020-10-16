@@ -7,7 +7,7 @@
       <h4 class="text-muted">Show your fast finger !</h4>
     </h1>
 
-    <form @submit.prevent="submitUsername">
+    <form class="login" @submit.prevent="submitUsername">
       <input
         required
         v-model="username"
@@ -16,7 +16,6 @@
       />
       <button type="submit" class="btn btn-primary">Play</button>
     </form>
-
     <br />
     <img src="https://media.giphy.com/media/Y0P6qNNkCyItnnx9c1/giphy.gif" />
     <br />
@@ -87,4 +86,8 @@ export default {
 </script>
 
 <style>
+.login {
+  text-align: center;
+  width: 37%;
+}
 </style>
