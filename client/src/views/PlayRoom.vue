@@ -1,7 +1,7 @@
 <template>
   <section id="playroom">
     <body>
-      <header class="title-area">
+      <header class="title-area text-center" >
         <h1>Test Your Typing Speed</h1>
         <p>
           Welcome to the TYPING RACE. Your goal is to duplicate the provided
@@ -9,20 +9,30 @@
         </p>
       </header>
       <main class="main">
-        <div class="intro">
-          {{ this.room }}
+        <div class="intro text-center">
+          <!-- {{ this.users }} -->
+          <div class="row" style="display: flex; justify-content: center">
+            <ScoreCard v-for="(user, i) in this.users" :key="i" :user="user">
+            </ScoreCard>
+          </div>
           <h1>Player: {{ playerName }}</h1>
-          <h1>Score: {{ score }}</h1>
-          <!-- <button @click="getQuote" v-if="users.length > 1"> -->
-          <button @click="getQuote" v-if="room.admin == this.playerName">
+          <!-- <h1>Score: {{ score }}</h1> -->
+          <button
+            @click="getQuote"
+            v-if="users.length > 1 && users[0].username === playerName"
+          >
+            <!-- <button @click="getQuote" v-if="room.admin == this.playerName"> -->
             Play the game
           </button>
         </div>
         <section class="test-area">
-          <div id="origin-text">
-            <p>{{ this.testText }}</p>
+          <div class="text-center" id="origin-text" v-if="isLoaded === true">
+            <p class="unselectable">{{ this.testText }}</p>
           </div>
-
+          <div v-else class="text-center">
+            <button class="donutSpinner"></button>
+          </div>
+          <br>
           <div
             class="test-wrapper"
             :style="{
@@ -49,16 +59,19 @@
 </template>
 
 <script>
+import ScoreCard from "@/components/ScoreCard.vue";
 import { mapState } from "vuex";
 export default {
   name: "PlayRoom",
+  components: {
+    ScoreCard,
+  },
   data() {
     return {
-      // room: {},
+      isLoaded: false,
       testAreaInput: "",
       spellCheck: false,
       borderColor: "grey",
-      score: 0,
       playerName: "",
     };
   },
@@ -69,6 +82,9 @@ export default {
     lose() {
       this.showLosingMessage();
     },
+    changeLoadedStatus(payload) {
+      this.isLoaded = payload;
+    },
   },
   methods: {
     reset() {
@@ -78,8 +94,13 @@ export default {
       this.$socket.emit("getQuote");
     },
     showWinningMessage() {
-      console.log("winning");
-      this.$swal.fire("Good job!", "You Win!", "success");
+      // console.log("winning");
+      this.$swal.fire("Good job!", "You Win!", "success").then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          this.$socket.emit("resetScore");
+        }
+      });
     },
     showLosingMessage() {
       console.log("losing");
@@ -91,12 +112,6 @@ export default {
     },
   },
   computed: {
-    room() {
-      return this.$store.state.room;
-    },
-    rooms() {
-      return this.$store.state.rooms;
-    },
     users() {
       return this.$store.state.users;
     },
@@ -114,33 +129,41 @@ export default {
       );
 
       if (this.testAreaInput == this.testText) {
+        this.$socket.emit("isLoadedFalse");
         this.getQuote();
-        this.score += 10;
         const payload = {
-          "room-name": this.room.name,
           username: this.playerName,
           answer: this.testAreaInput,
-          score: this.score,
+          score: 0,
         };
-        console.log(payload, "<<<INI PAYLOAD");
+        // console.log(payload, "<<<INI PAYLOAD");
         this.$socket.emit("sendAnswer", payload);
         this.borderColor = "green";
         this.testAreaInput = "";
-        // clearInterval(interval);
       } else {
         if (this.testAreaInput == originTextMatch) {
-          console.log("true");
+          // console.log("true");
           this.borderColor = "blue";
         } else {
-          console.log("false");
+          // console.log("false");
           this.borderColor = "red";
         }
       }
+    },
+    getCurrentQuoteState() {
+      return this.$store.state.quote;
     },
   },
   created() {
     // this.$store.dispatch("fetchQuotes");
     this.playerName = localStorage.username;
+    this.getCurrentQuoteState();
+  },
+  beforeRouteUpdate(to, from, next) {
+    // just use `this`
+    return this.$store.state.quote;
+    console.log(this.$store.state.quote);
+    next();
   },
 };
 </script>
@@ -207,6 +230,33 @@ body {
 .timer {
   font-size: 3em;
   font-weight: bold;
+}
+
+.donutSpinner {
+  display: inline-block;
+  border: 4px solid hsl(222, 100%, 95%);
+  border-left-color: hsl(243, 80%, 62%);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: donut-spin 1.2s linear infinite;
+}
+
+@keyframes donut-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.unselectable {
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 #reset {

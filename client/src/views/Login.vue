@@ -1,22 +1,30 @@
 <template>
-  <div class="custom-card custom-bg p-5 mb-5 bg-login">
+  <div class="custom-card custom-bg p-5 mb-5 text-center bg-login">
     <br />
     <h1>
       Typing Racer
       <br />
       <h4 class="text-muted">Show your fast finger !</h4>
     </h1>
-
-    <form @submit.prevent="submitUsername">
-      <input
+    <div class="row justify-content-center" style="display: flex; justify-content: center">
+      <div class="col-8" style="width: 50%">
+        <form class="login" style="width: 100%" @submit.prevent="submitUsername">
+          <div class="input-group">
+  <input
         required
         v-model="username"
         type="text"
         placeholder="insert your name"
+        class="form-control" style="200px"
       />
-      <button type="submit" class="btn btn-primary">Play</button>
+  <div class="input-group-btn">
+    <!-- Buttons -->
+    <button type="submit" class="btn btn-primary">Play</button>
+  </div>
+</div>
     </form>
-
+      </div>
+    </div>
     <br />
     <img src="https://media.giphy.com/media/Y0P6qNNkCyItnnx9c1/giphy.gif" />
     <br />
@@ -80,12 +88,15 @@ export default {
       };
       this.$socket.emit("userConnect", payload);
       localStorage.setItem("username", payload.username);
-      // this.$router.push({ name: "PlayRoom" });
-      this.$router.push({ name: "Rooms" }); // kalau room sudah jadi
+      this.$router.push({ name: "PlayRoom" });
     },
   },
 };
 </script>
 
 <style>
+.login {
+  text-align: center;
+  width: 37%;
+}
 </style>
