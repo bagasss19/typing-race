@@ -1,16 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import PlayRoom from '../views/PlayRoom.vue'
 import Login from '../views/Login.vue'
+import Rooms from '../views/Rooms.vue'
+import PlayRoom from '../views/PlayRoom.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'PlayRoom',
+    component: PlayRoom
   },
   {
     path: '/login',
@@ -18,10 +19,15 @@ const routes = [
     component: Login
   },
   {
-    path: '/playroom',
-    name: 'PlayRoom',
-    component: PlayRoom
+    path: '/rooms',
+    name: 'Rooms',
+    component: Rooms
   },
+  // {
+  //   path: '/playroom/:name',
+  //   name: 'PlayRoom',
+  //   component: PlayRoom
+  // },
   {
     path: '/about',
     name: 'About',
@@ -42,6 +48,13 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = localStorage.username
   if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
   else if (to.name === 'Login' && isAuthenticated) next({ name: 'PlayRoom' })
+<<<<<<< HEAD
+=======
+  else if (to.name === 'PlayRoom' && from.name === null && isAuthenticated) {
+    localStorage.clear()
+    next({ name: 'Login' })
+  }
+>>>>>>> 29234a58089a71110ed63ad616208e79ba87ac14
   else next()
 })
 

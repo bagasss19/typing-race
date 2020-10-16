@@ -18,7 +18,7 @@
             }"
       ></textarea>
     </center><br>
-    <center><button class="btn btn-warning" @click="getQuote" v-if="users.length> 1">Play the game</button></center>
+    <center><button class="btn btn-warning" @click="getQuote" v-if="users.length > 1 && users[0].username === playerName">Play the game</button></center>
     <br>
     <button class="btn btn-warning" @click="logout">Logout</button>
     <div>
@@ -36,7 +36,7 @@ export default {
   name: "PlayRoom",
   data() {
     return {
-      // testText: "",
+      // room: {},
       testAreaInput: "",
       spellCheck: false,
       borderColor: "grey",
@@ -45,13 +45,13 @@ export default {
       isPlay : false
     };
   },
-  sockets : {
-    win () {
-      this.showWinningMessage()
+  sockets: {
+    win() {
+      this.showWinningMessage();
     },
-    lose () {
-      this.showLosingMessage()
-    }
+    lose() {
+      this.showLosingMessage();
+    },
   },
   methods: {
     reset() {
@@ -63,13 +63,16 @@ export default {
     },
      showWinningMessage () {
       console.log("winning");
-      this.$swal.fire(
-        'Good job!',
-        'You Win!',
-        'success'
-      )
+      this.$swal.fire("Good job!", "You Win!", "success").then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          this.$socket.emit("resetScore");
+        } else if (result.isDenied) {
+          Swal.fire("Changes are not saved", "", "info");
+        }
+      });
     },
-    showLosingMessage () {
+    showLosingMessage() {
       console.log("losing");
       this.$swal.fire({
         icon: 'error',
@@ -107,6 +110,7 @@ export default {
         this.getQuote();
         this.score += 10;
         const payload = {
+          // "room-name": this.room.name,
           username: this.playerName,
           answer: this.testAreaInput,
           score: this.score,
@@ -127,11 +131,22 @@ export default {
         }
       }
     },
+    getCurrentQuoteState () {
+      return this.$store.state.quote
+    }
   },
   created() {
     // this.$store.dispatch("fetchQuotes");
     this.playerName = localStorage.username;
+    this.getCurrentQuoteState()
   },
+  beforeRouteUpdate (to, from, next) {
+    // just use `this`
+    return this.$store.state.quote
+    console.log(this.$store.state.quote);
+    next()
+  }
+
 };
 </script>
 
