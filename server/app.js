@@ -14,13 +14,13 @@ app.use(express.json())
 app.get('/quoteApi', quoteApi)
 
 let rooms = []
-let users = []
+// let users = []
 let answer = []
 io.on('connection', (socket) => {
   let userData = null;
   socket.on('userConnect', (data) => {
     console.log('someone-connected test', data);
-    users.push(data)
+    // users.push(data)
     userData = data
     // io.emit('USER_CONNECTED', users)
     socket.emit('get-rooms', rooms)

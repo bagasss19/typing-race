@@ -25,7 +25,7 @@
       <h5 class="card-text">players: {{ this.room.users.length }}</h5>
 
       <div>
-        <a href="#" class="btn btn-primary">Join</a>
+        <button @click="joinRoom(room.name)">Join Room</button>
       </div>
     </div>
   </div>
