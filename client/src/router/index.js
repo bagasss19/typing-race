@@ -48,13 +48,10 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = localStorage.username
   if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
   else if (to.name === 'Login' && isAuthenticated) next({ name: 'PlayRoom' })
-<<<<<<< HEAD
-=======
   else if (to.name === 'PlayRoom' && from.name === null && isAuthenticated) {
     localStorage.clear()
     next({ name: 'Login' })
   }
->>>>>>> 29234a58089a71110ed63ad616208e79ba87ac14
   else next()
 })
 
