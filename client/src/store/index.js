@@ -10,9 +10,9 @@ const baseUrl = 'http://localhost:3000'
 export default new Vuex.Store({
   state: {
     // quotes: "",
-    // users: [],
-    rooms: [],
-    room: {},
+    users: [],
+    // rooms: [],
+    // room: {},
     quote: ''
   },
   mutations: {
@@ -22,14 +22,14 @@ export default new Vuex.Store({
     'SOCKET_USER_CONNECTED'(state, payload) {
       state.users = payload
     },
-    'SOCKET_ROOM_DETAIL'(state, payload) {
-      state.room = payload
-      console.log(state.room, "<<< socket updated room");
-    },
-    'SOCKET_UPDATED_ROOMS'(state, payload) {
-      state.rooms = payload
-      console.log(state.rooms, "<<< socket updated roomss");
-    },
+    // 'SOCKET_ROOM_DETAIL'(state, payload) {
+    //   state.room = payload
+    //   console.log(state.room, "<<< socket updated room");
+    // },
+    // 'SOCKET_UPDATED_ROOMS'(state, payload) {
+    //   state.rooms = payload
+    //   console.log(state.rooms, "<<< socket updated roomss");
+    // },
     'SOCKET_QUOTE_RECEIVED'(state, payload) {
       state.quote = payload
     }

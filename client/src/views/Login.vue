@@ -80,8 +80,8 @@ export default {
       };
       this.$socket.emit("userConnect", payload);
       localStorage.setItem("username", payload.username);
-      // this.$router.push({ name: "PlayRoom" });
-      this.$router.push({ name: "Rooms" }); // kalau room sudah jadi
+      this.$router.push({ name: "PlayRoom" });
+      // this.$router.push({ name: "Rooms" }); // kalau room sudah jadi
     },
   },
 };

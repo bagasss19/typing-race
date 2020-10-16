@@ -14,55 +14,52 @@ app.use(express.json())
 app.get('/quoteApi', quoteApi)
 
 let rooms = []
-// let users = []
+let users = []
 let answer = []
 io.on('connection', (socket) => {
   let userData = null;
   socket.on('userConnect', (data) => {
     console.log('someone-connected test', data);
-    // users.push(data)
-    userData = data
-    // io.emit('USER_CONNECTED', users)
-    socket.emit('get-rooms', rooms)
+
+    users.push(data)
+    // userData = data
+    io.emit('USER_CONNECTED', users)
+    // socket.emit('get-rooms', rooms)
   })
 
-  socket.on('create-room', data => {
-    console.log("create-room", data);
-    let room = {
-      name: data["room-name"],
-      users: [],
-      admin: data.admin
-    }
-    rooms.push(room)
-    // io.emit("updated-room", rooms)
-    io.emit("UPDATED_ROOMS", rooms)
-  })
+  // socket.on('create-room', data => {
+  //   console.log("create-room", data);
+  //   let room = {
+  //     name: data["room-name"],
+  //     users: [],
+  //     admin: data.admin
+  //   }
+  //   rooms.push(room)
+  //   // io.emit("updated-room", rooms)
+  //   io.emit("UPDATED_ROOMS", rooms)
+  // })
 
   socket.on('sendAnswer', (data) => {
     console.log(data, "<< data sendAnswer");
     console.log(users, "<< users sendanswer");
-    let roomIndex = rooms.findIndex((i) => i.name == data["room-name"])
-    console.log(rooms[roomIndex], "<<< room sendAnswewr");
-    let usernameIndex = rooms[roomIndex]["users"].findIndex((j) => j.username == data.username)
-    console.log(rooms[roomIndex]["users"].findIndex((j) => j.username == data.username), "<< updated room sendAnswer");
-    rooms[roomIndex]["users"][usernameIndex].score = data.score
-    console.log(rooms[roomIndex]["users"][usernameIndex], "<< updated user sendAnswer");
-    io.emit("UPDATED_ROOMS", rooms)
-    io.emit("ROOM_DETAIL", rooms[roomIndex])
-    if (data.score >= 50) {
-      socket.emit('win')
-      socket.broadcast.emit('lose')
-    }
-    // users.map(el => {
-    //   if (el.username === data.username) {
-    //     return el.score = data.score
-    //   }
-    // })
-    // io.emit('USER_CONNECTED', users)
+    // let roomIndex = rooms.findIndex((i) => i.name == data["room-name"])
+    // console.log(rooms[roomIndex], "<<< room sendAnswewr");
+    // let usernameIndex = rooms[roomIndex]["users"].findIndex((j) => j.username == data.username)
+    // console.log(rooms[roomIndex]["users"].findIndex((j) => j.username == data.username), "<< updated room sendAnswer");
+    // rooms[roomIndex]["users"][usernameIndex].score = data.score
+    // console.log(rooms[roomIndex]["users"][usernameIndex], "<< updated user sendAnswer");
+    // io.emit("UPDATED_ROOMS", rooms)
+    // io.emit("ROOM_DETAIL", rooms[roomIndex])
     // if (data.score >= 50) {
     //   socket.emit('win')
     //   socket.broadcast.emit('lose')
     // }
+    users.map(el => {
+      if (el.username === data.username) {
+        return el.score = data.score
+      }
+    })
+    io.emit('USER_CONNECTED', users)
   })
 
   socket.on('getQuote', () => {
@@ -100,6 +97,15 @@ io.on('connection', (socket) => {
     // let indexDisconnectedUser = users.indexOf(userData)
     // let removed = users.splice(indexDisconnectedUser,1)
     // console.log(users)
+  })
+
+  socket.on('resetScore', (data) => {
+    console.log("RESET<<<");
+    users.map(user => {
+      user.score = 0
+    })
+    io.emit('USER_CONNECTED', users)
+    // socket.emit('get-rooms', rooms)
   })
 })
 
