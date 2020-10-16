@@ -3,8 +3,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VueSocketIO from 'vue-socket.io'
+import VueSweetalert2 from 'vue-sweetalert2';
 
 Vue.config.productionTip = false
+Vue.use(VueSweetalert2);
 
 Vue.use(new VueSocketIO({
   debug: true,

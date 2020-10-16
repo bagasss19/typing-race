@@ -1,37 +1,26 @@
 <template>
   <section id="playroom">
     <div class="title-area bg-dark">
-      <h1>
-        Welcome to the TYPING RACE, IkhsanGama!. Your goal is to duplicate the
-        provided text, EXACTLY, in the field below. Good Luck!
+      <h1 v-if="!isPlay">
+        Welcome, {{ playerName }}. Your goal is to duplicate the
+        provided text below, EXACTLY. Good Luck!
       </h1>
     </div>
-    <br />
-    <div class="intro">
-      <h1>Player: {{ playerName }}</h1>
-      <h1>Score: {{ score }}</h1>
-      <h1>{{users}}</h1>
-      <button @click="getQuote" v-if="users.length > 1">Play the game</button>
-    </div>
+    <br />  
     <div class="test-area">
-      <div class="badge badge-primary text-wrap">
         <p>{{ this.testText }}</p>
-      </div>
     </div>
     <center>
-      <textarea v-model="testAreaInput" name="input" form="input" cols="50" rows="4" placeholder="Type here..."></textarea
-      >
-    </center>
-    <form id="input">
-      <!-- <input type="textarea" v-model="testAreaInput" placeholder="type here" class="center"><br><br> -->
-      <button
-        @click="reset"
-        id="reset"
-        class="btn btn-warning flex-parent jc-center"
-      >
-        Submit
-      </button>
-    </form>
+      <textarea v-model="testAreaInput" name="input" form="input" cols="50" rows="4" placeholder="Type here..."
+      :style="{
+              border: '12px solid ' + this.borderColor,
+              borderRadius: '10px',
+            }"
+      ></textarea>
+    </center><br>
+    <center><button class="btn btn-warning" @click="getQuote" v-if="users.length> 1">Play the game</button></center>
+    <br>
+    <button class="btn btn-warning" @click="logout">Logout</button>
     <div>
       <!-- <section id="clock">
         <div class="timer">00:00:00</div>
@@ -53,7 +42,16 @@ export default {
       borderColor: "grey",
       score: 0,
       playerName: "",
+      isPlay : false
     };
+  },
+  sockets : {
+    win () {
+      this.showWinningMessage()
+    },
+    lose () {
+      this.showLosingMessage()
+    }
   },
   methods: {
     reset() {
@@ -61,7 +59,29 @@ export default {
     },
     getQuote() {
       this.$socket.emit("getQuote");
+      this.isPlay = true
     },
+     showWinningMessage () {
+      console.log("winning");
+      this.$swal.fire(
+        'Good job!',
+        'You Win!',
+        'success'
+      )
+    },
+    showLosingMessage () {
+      console.log("losing");
+      this.$swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'You Lose!',
+        footer: '<a href>Why do I have this issue?</a>'
+      })
+    },
+    logout() {
+      localStorage.clear();
+      this.$router.push({ name: "Login" });
+    }
   },
   computed: {
     // testText() {
@@ -99,7 +119,7 @@ export default {
       } else {
         if (this.testAreaInput == originTextMatch) {
           console.log("true");
-          this.borderColor = "blue";
+          this.borderColor = "green";
           
         } else {
           console.log("false");
@@ -123,6 +143,9 @@ select,
 p {
   font-family: "Balsamiq Sans", cursive;
   text-align: center;
+  font-size: 25px;
+  color: black;
+  margin-bottom: 1.5em;
 }
 /* textarea {
   font-family: 'Balsamiq Sans', cursive;
@@ -134,11 +157,7 @@ h1 {
   text-align: center;
   font-size: 20px;
   font-family: "Balsamiq Sans", cursive;
-}
-
-p {
-  text-align: center;
-  margin-bottom: 1.5em;
+  color: black;
 }
 
 /* Layout */
@@ -147,12 +166,11 @@ body {
   background-image: url("https://images7.alphacoders.com/896/thumb-1920-896758.jpg");
   background-repeat: no-repeat;
   background-size: cover;
+  text-align: center;
 }
 
 .title-area {
   padding: 1em 0.5em;
-  background-color: #0d1b2e;
-  color: white;
 }
 
 .test-area {
@@ -190,11 +208,8 @@ form {
   width: 30%;
   margin-left: 30em;
 }
-.flex-parent {
-  display: flex;
-}
 
-.jc-center {
-  justify-content: center;
+.checked {
+  color: orange;
 }
 </style>

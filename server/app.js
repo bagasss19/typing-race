@@ -33,6 +33,10 @@ io.on('connection', (socket) => {
       }
     })
     io.emit('USER_CONNECTED', users)
+    if (data.score >= 50) {
+      socket.emit('win')
+      socket.broadcast.emit('lose')
+    }
   })
 
   socket.on('getQuote', () => {
@@ -44,7 +48,7 @@ io.on('connection', (socket) => {
         io.emit('QUOTE_RECEIVED', data.quote.body)
       })
       .catch(err => {
-        console.log(err.response, '<< fetch products err response index')
+        io.emit('QUOTE_RECEIVED', "Internal server error mas, coba ketik aja gpp")
       })
   })
 

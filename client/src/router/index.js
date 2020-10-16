@@ -41,7 +41,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const isAuthenticated = localStorage.username
   if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
-  else if (to.name === 'Login' && isAuthenticated) next({ name: 'Home' })
+  else if (to.name === 'Login' && isAuthenticated) next({ name: 'PlayRoom' })
   else next()
 })
 
