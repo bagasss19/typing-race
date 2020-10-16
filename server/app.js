@@ -20,9 +20,14 @@ io.on('connection', (socket) => {
   let userData = null;
   socket.on('userConnect', (data) => {
     console.log('someone-connected test', data);
-
-    users.push(data)
-    userData = data
+    let isFound = false
+    users.map(user => {
+      if (user.username == data.username) {
+        isFound = true
+      }
+    })
+    if (!isFound) users.push(data)
+    // userData = data
     io.emit('USER_CONNECTED', users)
     // socket.emit('get-rooms', rooms)
   })
@@ -103,7 +108,7 @@ io.on('connection', (socket) => {
     // console.log(users)
     if (userData) {
       let indexDisconnectedUser = users.indexOf(userData)
-      let removed = users.splice(indexDisconnectedUser,1)
+      let removed = users.splice(indexDisconnectedUser, 1)
       io.emit('USER_CONNECTED', users)
     }
   })

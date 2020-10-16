@@ -5,22 +5,30 @@
         Welcome, {{ playerName }}. Your goal is to duplicate the
         provided text below, EXACTLY. Good Luck!
       </h1>
+          <ScoreCard v-for="(user, i) in this.users" :key="i" :user="user">
+            </ScoreCard>
     </div>
-    <br />  
+
+    <br /> <br><br><br><br><br>
     <div class="test-area">
         <p>{{ this.testText }}</p>
     </div>
-    <center>
-      <textarea v-model="testAreaInput" name="input" form="input" cols="50" rows="4" placeholder="Type here..."
+ <br><br>
+      <textarea v-model="testAreaInput" name="input" cols="50" rows="4" placeholder="Type here..."
       :style="{
               border: '12px solid ' + this.borderColor,
               borderRadius: '10px',
             }"
       ></textarea>
-    </center><br>
-    <center><button class="btn btn-warning" @click="getQuote" v-if="users.length > 1 && users[0].username === playerName">Play the game</button></center>
+    <br><br>
+              <button
+              class="btn btn-warning"
+            @click="getQuote"
+            v-if="users.length > 1 && users[0].username === playerName"
+          >
+            Play the game
+          </button>
     <br>
-    <button class="btn btn-warning" @click="logout">Logout</button>
     <div>
       <!-- <section id="clock">
         <div class="timer">00:00:00</div>
@@ -31,9 +39,13 @@
 </template>
 
 <script>
+import ScoreCard from "@/components/ScoreCard.vue";
 import { mapState } from "vuex";
 export default {
   name: "PlayRoom",
+  components: {
+    ScoreCard,
+  },
   data() {
     return {
       // room: {},
@@ -67,8 +79,6 @@ export default {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
           this.$socket.emit("resetScore");
-        } else if (result.isDenied) {
-          Swal.fire("Changes are not saved", "", "info");
         }
       });
     },
@@ -161,6 +171,7 @@ p {
   font-size: 25px;
   color: black;
   margin-bottom: 1.5em;
+  background-color: wheat;
 }
 /* textarea {
   font-family: 'Balsamiq Sans', cursive;

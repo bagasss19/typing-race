@@ -7,11 +7,7 @@
       <h4 class="text-muted">Show your fast finger !</h4>
     </h1>
 
-<<<<<<< HEAD
     <form class="login" @submit.prevent="submitUsername">
-=======
-    <form @submit.prevent="submitUsername">
->>>>>>> 29234a58089a71110ed63ad616208e79ba87ac14
       <input
         required
         v-model="username"
@@ -20,10 +16,6 @@
       />
       <button type="submit" class="btn btn-primary">Play</button>
     </form>
-<<<<<<< HEAD
-=======
-
->>>>>>> 29234a58089a71110ed63ad616208e79ba87ac14
     <br />
     <img src="https://media.giphy.com/media/Y0P6qNNkCyItnnx9c1/giphy.gif" />
     <br />
@@ -88,23 +80,15 @@ export default {
       this.$socket.emit("userConnect", payload);
       localStorage.setItem("username", payload.username);
       this.$router.push({ name: "PlayRoom" });
-<<<<<<< HEAD
-      //this.$router.push({ name: "Rooms" }); // kalau room sudah jadi
-=======
       // this.$router.push({ name: "Rooms" }); // kalau room sudah jadi
->>>>>>> 29234a58089a71110ed63ad616208e79ba87ac14
     },
   },
 };
 </script>
 
 <style>
-<<<<<<< HEAD
 .login {
   text-align: center;
   width: 37%;
 }
 </style>
-=======
-</style>
->>>>>>> 29234a58089a71110ed63ad616208e79ba87ac14
