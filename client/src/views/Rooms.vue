@@ -26,9 +26,10 @@ export default {
     };
   },
   sockets: {
-    "get-rooms"(data) {
-      this.rooms = data;
-    },
+    // "get-rooms"(data) {
+    //   console.log("dariget-rooms", data);
+    //   this.rooms = data;
+    // },
     // "updated-room"(data) {
     //   this.rooms = data;
     // },
@@ -45,6 +46,7 @@ export default {
     // this.$socket.emit("updated-room", (data) => {
     //   this.rooms = data;
     // });
+    this.getRoom()
   },
   methods: {
     joinRoom(name) {
@@ -65,6 +67,9 @@ export default {
       this.$socket.emit("create-room", payload);
       this.roomName = "";
     },
+    getRoom () {
+      return this.$store.state.rooms;
+    }
   },
 };
 </script>
